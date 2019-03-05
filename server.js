@@ -1,26 +1,13 @@
 'use strict';
 
-const Hapi=require('hapi');
-const jwt = require('jsonwebtoken'),
- mongoose = require('./database');
-//const secret = require('./config');
-//const path = require('path');
-//const glob = require('glob');
-// Create a server with a host and port
-const server=Hapi.server({
-    host:'localhost',
-    port:8000
+const Hapi = require('hapi');
+const jwt = require('jsonwebtoken');
+
+const server = Hapi.server({
+    port: 3000,
+    host: 'localhost'
 });
 
-// Add the route
-server.route({
-    method:'GET',
-    path:'/hello',
-    handler:function(request,h) {
-
-        return'hello world';
-    }
-});
 var accounts = {
   123: {
       id: 123,
@@ -80,19 +67,23 @@ server.register(require('hapi-auth-jwt'), function (error) {
       }
   });
 });
-// Start the server
-const start =  async function() {
 
-    try {
-        await server.start();
-    }
-    catch (err) {
-        console.log(err);
-        process.exit(1);
-    }
 
-    console.log('Server running at:', server.info.uri);
+const init = async () => {
+
+    await server.start();
+    console.log(`Server running at: ${server.info.uri}`);
 };
 
-start();
+process.on('unhandledRejection', (err) => {
+
+    console.log(err);
+    process.exit(1);
+});
+
+init();
+
+
+
+
 
